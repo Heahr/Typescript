@@ -17,20 +17,24 @@ GlaphQL 같이 연습중..
 
 다른 것과 다른 장점은 Over-fetching과 Under-fetching을 효과적으로 처리할수 있다는점.
 ```
-Over-fetching: 예를들어 모든 유저의 이름을 웹사이트에 보여주고싶으면 GET 명령을 쓰는데, 유저의 이름뿐만아니라 성별이나 프로필사진등도 같이 넘겨받을것이다.(유저의 다른 불필요한 정보들, 내가 원했던 것들이 아닌정보, 모든 Object들을 받지만 사용자명만 사용.)
+Over-fetching: 예를들어 모든 유저의 이름을 웹사이트에 보여주고싶으면 GET 명령을 쓰는데, 유저의 이름뿐만아니라 성별이나 프로필사진등도 같이 넘겨받을것이다.
+(유저의 다른 불필요한 정보들, 내가 원했던 것들이 아닌정보, 모든 Object들을 받지만 사용자명만 사용.)
 Database에서는 내가 사용하지않을 영역을 요청하는 방식은 효율적이지 못하기 때문에 좋지못한 상황입니다.
 이런 불필요한 정보들까지 한꺼번에 받아 사용하는 상황입니다.(요청한 영역의 정보보다, 많은 정보를 서버에서 받는것)
 ```
 
 ```
-Under-fetching: 어떤 하나를 완성하기위해 다른 요청들을 해야할 때 발생하는데, 예를들어 앱을 실행하면 정보들을 많이 받게 되는데(프로필, 알림, 앱에필요한 정보등...) 
+Under-fetching: 어떤 하나를 완성하기위해 다른 요청들을 해야할 때 발생하는데, 예를들어 앱을 실행하면 정보들을 많이 받게 되는데
+(프로필, 알림, 앱에필요한 정보등...) 
 REST(Representational State Transfer, 자원을 정의하고 자원에 대한 주소를 지정하는 방법 전반)에서 하나를 완성하려고 많은 소스들을 요청하는것.
 ```
 
 즉 Frontend가 Database에 요청하는 사용자명만 가져올 수 있다.
 
 ```
-yarn add graphql-yoga, yarn global add nodemon(defalut 파일 변경시 자동재시작), yarn global add babel-cli --ignore-engines,
+yarn add graphql-yoga, 
+yarn global add nodemon(defalut 파일 변경시 자동재시작), 
+yarn global add babel-cli --ignore-engines,
 yarn add babel-node --dev
 (const graphql = require("graphql-yoga") -> import {GraphQLServer} from "graphql-yoga"; (노드처럼)변경)
 ```
