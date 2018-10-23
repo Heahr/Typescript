@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const CryptoJS = require("crypto-js");
 class Block {
     constructor(index, hash, previousHash, data, timestamp) {
         this.index = index;
@@ -9,8 +10,63 @@ class Block {
         this.timestamp = timestamp;
     }
 }
+//method만들건데, 이것은 static method이며, class block 안에있으며 클래스가 생성되지 않았어도 호출할수있는 method이다. -> 클래스안에서 자유롭게사용가능.
+//ex) Block.calculateBlockHash 이가능 -> 없으면 let a = new Block 이후에 a.calculateBlockHash 으로 가능.
+Block.calculateBlockHash = (index, previousHash, timestamp, data) => CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
+Block.validateStructure = (aBlock) => typeof aBlock.index === "number" &&
+    typeof aBlock.hash === "string" &&
+    typeof aBlock.previousHash === "string" &&
+    typeof aBlock.timestamp === "number" &&
+    typeof aBlock.data === "string";
+/*
+블록체인
+데이터 분산 처리 기술. -> 네트워크에 참여하는 모든 사용자가 모든 거래 내역 등의 데이터를 분산, 저장하는 기술.
+거래가 계속 이루어지다보면 모든 사용자는 거래내역을 보유하고 있어서 거래내역을 확인할 때는 모든 사용자가 보유한 장부를 대조해야한다. 그래서 공공거래장부, 분산거래장부라고 불리기도 한다고함.
+
+출처 : https://brunch.co.kr/@banksalad/228
+*/
 const genesisBlock = new Block(0, "20020202", "", "Hi", 123456);
 let blockchain = [genesisBlock];
+console.log(blockchain);
+//yarn add crypto-js 추가사용
+const getBlockchain = () => blockchain;
+const getLatesBlock = () => blockchain[blockchain.length - 1];
+const getNewTimeStamp = () => Math.round(new Date().getTime() / 1000);
+const createNewBlock = (data) => {
+    const previousBlock = getLatesBlock();
+    const newIndex = previousBlock.index + 1;
+    const newTimestamp = getNewTimeStamp();
+    const newHash = Block.calculateBlockHash(newIndex, previousBlock.hash, newTimestamp, data);
+    const newBlock = new Block(newIndex, newHash, previousBlock.hash, data, newTimestamp);
+    addBlock(newBlock);
+    return newBlock;
+};
+const getHashforBlock = (aBlock) => Block.calculateBlockHash(aBlock.index, aBlock.previousHash, aBlock.timestamp, aBlock.data);
+const isBlockValid = (candidateBlock, previousBlock) => {
+    if (!Block.validateStructure(candidateBlock)) {
+        return false;
+    }
+    else if (previousBlock.index + 1 !== candidateBlock.index) {
+        return false;
+    }
+    else if (previousBlock.hash !== candidateBlock.previousHash) {
+        return false;
+    }
+    else if (getHashforBlock(candidateBlock) !== candidateBlock.hash) {
+        return false;
+    }
+    else {
+        return true;
+    }
+};
+const addBlock = (candidateBlock) => {
+    if (isBlockValid(candidateBlock, getLatesBlock())) {
+        blockchain.push(candidateBlock);
+    }
+};
+createNewBlock("two");
+createNewBlock("three");
+createNewBlock("four");
 console.log(blockchain);
 /*
 class Human {
